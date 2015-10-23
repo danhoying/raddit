@@ -11,8 +11,12 @@ class CommentsController < ApplicationController
       if @comment.save
         format.html { redirect_to @link, notice: 'Comment was successfully created.' }
         format.json { render json: @comment, status: :created, location: @comment }
+      elsif @comment.errors.any?
+        @comment.errors.full_messages.each do |message|
+          format.html { redirect_to :back, notice: message }
+        end
       else
-        format.html { render action: "new" }
+        format.html { render 'new' }
         format.json { render json: @comment.errors, status: :unprocessable_entity }
       end
     end
